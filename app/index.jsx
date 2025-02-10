@@ -11,6 +11,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '../constants/images';
 import CustomButton from '../components/CustomButton';
 
+import { useGlobalContext } from "../context/GlobalProvider"
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -19,7 +21,8 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
   });
-
+  const { isLoading, isLoggedIn } = useGlobalContext()
+  
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -29,6 +32,8 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
+
+  if (!isLoading && isLoggedIn) return <Redirect href={"/home"} />
 
   return (
     <SafeAreaView className="bg-primary h-full">

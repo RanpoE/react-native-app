@@ -1,20 +1,41 @@
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from "../../constants/images"
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import { Link } from 'expo-router';
+import { signIn } from '../../lib/appwrite';
+import { router } from 'expo-router';
 
 const SignIn = () => {
   const [form, setForm] = useState({
     email: '',
     password: ''
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const { email, password } = form
+    if (!email || !password) {
+      Alert.alert("Error please fill all fields")
+      return
+    }
 
+    setIsSubmitting(true)
+
+    try {
+      const result = await signIn(email, password)
+
+      // set to global state
+      router.replace("/home")
+
+    } catch (error) {
+      Alert.alert('Error ', error.message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -46,6 +67,7 @@ const SignIn = () => {
             title="Sign in"
             containerStyles="mt-7"
             handlePress={handleSubmit}
+            isLoading={isSubmitting}
           />
           <View className="justify-center pt-5 flex-row gap-2">
             <Text className="text-sm text-gray-100">Don't have account?</Text>

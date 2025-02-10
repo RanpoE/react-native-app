@@ -14,8 +14,9 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#ffffzff"
+      },
+      "package": "com.rn.c_course"
     },
     "web": {
       "bundler": "metro",

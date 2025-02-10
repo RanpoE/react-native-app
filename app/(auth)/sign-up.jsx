@@ -1,19 +1,40 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from "../../constants/images"
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
+import { createUser } from '../../lib/appwrite';
 
 const SignUp = () => {
   const [form, setForm] = useState({
     email: '',
     password: '',
-    c_password: ''
+    username: '',
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const { email, password, username } = form
+    if (!email || !password || !username) {
+      Alert.alert("Error please fill all fields")
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const result = await createUser(email, password, username)
+
+      // set to global state
+      router.replace("/home")
+
+    } catch (error) {
+      Alert.alert('Error ', error.message)
+    } finally {
+      setIsSubmitting(false)
+    }
 
   }
 
@@ -27,8 +48,15 @@ const SignUp = () => {
             className="w-[155px] h-[35px]"
           />
           <Text className="text-2xl text-white mt-10 font-semibold">
-            Sign up in Aora
+            Sign up to Aora
           </Text>
+          <FormField
+            title="Username"
+            value={form.username}
+            handleChangeText={(e) => { setForm({ ...form, username: e }) }}
+            otherStyle="mt-7"
+            keyBoardType="email-address"
+          />
           <FormField
             title="Email"
             value={form.email}
@@ -42,16 +70,11 @@ const SignUp = () => {
             handleChangeText={(e) => { setForm({ ...form, password: e }) }}
             otherStyle="mt-7"
           />
-          <FormField
-            title="Confirm password"
-            value={form.c_password}
-            handleChangeText={(e) => { setForm({ ...form, c_password: e }) }}
-            otherStyle="mt-7"
-          />
           <CustomButton
             title="Sign up"
             containerStyles="mt-7"
             handlePress={handleSubmit}
+            isLoading={isSubmitting}
           />
           <View className="justify-center pt-5 flex-row gap-2">
             <Text className="text-sm text-gray-100">Already have account?</Text>
