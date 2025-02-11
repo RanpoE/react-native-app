@@ -8,7 +8,7 @@ import { View, Text } from 'react-native';
 const TabIcon = ({ icon, name, color, focused }) => {
     return (
         <View className="flex items-center justify-center gap-0">
-            <FontAwesome name={icon} size={18} />
+            <FontAwesome name={icon} size={18} color={color} />
         </View>
     )
 
@@ -22,19 +22,31 @@ const TabsLayout = () => {
             icon: "home",
         },
         {
+            title: "Bookmark",
+            name: "bookmark",
+            icon: "bookmark"
+        },
+
+        {
+            title: "Create",
+            name: "create",
+            icon: "plus-circle"
+        },
+
+        {
             title: "Profile",
             name: "profile",
             icon: "user"
-        }
+        },
     ]
 
     return (
         <>
             <Tabs
                 screenOptions={{
-                    tabBarActiveTintColor: '#FFF',
+                    tabBarActiveTintColor: '#FFA001',
                     // tabBarInactiveTintColor: 'blue',
-                    tabBarActiveBackgroundColor: '#FFA001'
+                    // tabBarActiveBackgroundColor: '#FFA001'
                 }}
             >
                 {
@@ -45,8 +57,8 @@ const TabsLayout = () => {
                             options={{
                                 title: item.title,
                                 headerShown: false,
-                                tabBarIcon: () => (
-                                    <TabIcon name={item.title} icon={item.icon} />
+                                tabBarIcon: ({ color, focused }) => (
+                                    <TabIcon name={item.title} icon={item.icon} color={color} />
                                 )
                             }}
                         />

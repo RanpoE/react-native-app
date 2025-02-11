@@ -21,11 +21,8 @@ const GlobalProvider = ({ children }) => {
                 if (res) {
                     setIsLoggedIn(true)
                     setUser(res)
-                } else {
-                    setIsLoggedIn(false)
-                    setUser(null)
                 }
-            }).catch((err) => {
+            }).catch((error) => {
                 console.error(error)
             }).finally(() => setIsLoading(false))
     }, []);
