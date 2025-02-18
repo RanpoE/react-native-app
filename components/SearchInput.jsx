@@ -16,12 +16,12 @@ const SearchInput = ({ title, value, placeholder, handleChangeText, otherStyles,
                 placeholderTextColor="#7b7b8b"
                 onChangeText={handleChangeText}
             />
-
             <TouchableOpacity
                 onPress={() => { }}
             >
                 <FontAwesome name="search" size={24} color="#fff" />
             </TouchableOpacity>
+            <Text className="text-xl text-white">{value}</Text>
         </View>
     )
 }

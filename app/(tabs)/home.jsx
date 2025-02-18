@@ -1,21 +1,41 @@
-import { View, Text, FlatList, Image } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList, Image, RefreshControl, Alert } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import images from '../../constants/images'
 import SearchInput from '../../components/SearchInput'
 import Trending from '../../components/Trending'
 import EmptyState from '../../components/EmptyState'
+import useDebounce from '../../hooks/useDebounce'
+import { getAllPosts } from '../../lib/appwrite'
+import useAppwrite from '../../lib/useAppwrite'
+import VideoCard from '../../components/VideoCard'
 
 const Home = () => {
+  const { data: posts, refetch } = useAppwrite(getAllPosts)
+
+  const [refreshing, setRefreshing] = useState(false)
+  const [searchInput, setSearchInput] = useState("")
+
+  const onRefresh = async () => {
+    setRefreshing(true)
+    // Fetching data
+    await refetch()
+    setRefreshing(false)
+  }
+  const handleInput = (e) => {
+    const { target } = e
+    setSearchInput(target)
+  }
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
         // data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
-        data={[]}
-        keyExtractor={(item) => item.id}
+        data={posts}
+        keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <Text className="text-3xl text-white">{item.id}</Text>
+          <VideoCard video={item} />
         )}
         ListHeaderComponent={() => (
           <View className="my-6 px-4 space-y-6">
@@ -33,9 +53,9 @@ const Home = () => {
               </View>
             </View>
             <SearchInput
-              value={""}
+              value={searchInput}
               placeholder={"Search for video"}
-              handleChangeText={() => { }}
+              handleChangeText={handleInput}
             />
             <View className="w-full flex-1 pt-5 pb-8">
               <Text className="text-green-100 text-lg mb-3">
@@ -53,6 +73,12 @@ const Home = () => {
             subtitle="Be the first to create one"
           />
         )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       />
     </SafeAreaView>
   )
