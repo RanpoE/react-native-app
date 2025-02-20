@@ -1,9 +1,11 @@
-import { View, Text, Image } from 'react-native'
-import React from 'react'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 
 const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avatar } } }) => {
+    const [playing, setPlaying] = useState(false)
+
     return (
         <View className="flex-col items-center px-4 mb-14">
             <View className="flex-row gap-3 items-start">
@@ -25,6 +27,25 @@ const VideoCard = ({ video: { title, thumbnail, video, creator: { username, avat
                     <FontAwesome name="ellipsis-v" size={24} color="white" />
                 </View>
             </View>
+            {
+                playing ?
+                    <Text className="text-white">Playing</Text> : (
+                        <TouchableOpacity
+                            activeOpacity={0.7}
+                            onPress={() => setPlaying(true)}
+                            className="w-full h-60 rounded-xl mt-3 relative justify-center items-center"
+                        >
+                            <Image
+                                source={{ uri: thumbnail }}
+                                className="w-full h-full rounded-xl mt-3"
+                                resizeMode="cover"
+                            />
+                            <View className="absolute">
+                                <FontAwesome name='play' size={24} color="white" />
+                            </View>
+                        </TouchableOpacity>
+                    )
+            }
         </View>
     )
 }

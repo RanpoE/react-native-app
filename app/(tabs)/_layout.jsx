@@ -1,11 +1,10 @@
 import React from 'react'
 import { Tabs, Redirect } from 'expo-router'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 
 
-const TabIcon = ({ icon, name, color, focused }) => {
+const TabIcon = ({ icon, color, focused }) => {
     return (
         <View className="flex items-center justify-center gap-0">
             <FontAwesome name={icon} size={18} color={color} />
